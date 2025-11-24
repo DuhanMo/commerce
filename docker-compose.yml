@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  core-db:
+    image: mysql:8.0
+    container_name: commerce-mysql
+    ports:
+      - "3306:3306" # 로컬:컨테이너
+    environment:
+      MYSQL_ROOT_PASSWORD: root            # 루트 비밀번호
+      MYSQL_DATABASE: commerce_db          # 자동 생성할 DB 이름
+      MYSQL_USER: admin                    # 사용할 계정
+      MYSQL_PASSWORD: 1234                 # 사용할 비번
+    command:
+      # 한글 및 이모지 깨짐 방지 (utf8mb4) 설정
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+    volumes:
+      # 컨테이너를 꺼도 데이터가 사라지지 않도록 로컬에 저장
+      - ./db_data:/var/lib/mysql

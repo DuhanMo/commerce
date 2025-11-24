@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.jdbc.core.JdbcTemplate
+import javax.sql.DataSource
 
 @Configuration
 internal class CoreDataSourceConfig {
@@ -18,5 +20,10 @@ internal class CoreDataSourceConfig {
     @Bean
     fun coreDataSource(@Qualifier("coreHikariConfig") config: HikariConfig): HikariDataSource {
         return HikariDataSource(config)
+    }
+
+    @Bean
+    fun coreJdbcTemplate(@Qualifier("coreDataSource") dataSource: DataSource): JdbcTemplate {
+        return JdbcTemplate(dataSource)
     }
 }

@@ -44,14 +44,16 @@ spring:
         show_log: true
         format_sql: true
     show-sql: true
+    hibernate:
+      ddl-auto: create
 
 storage:
   datasource:
     core:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://${storage.database.core-db.url}
-      username: ${storage.database.core-db.username}
-      password: ${storage.database.core-db.password}
+      jdbc-url: jdbc:mysql://localhost:3306/commerce_db?rewriteBatchedStatements=true&profileSQL=true&logger=Slf4JLogger&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+      username: admin
+      password: 1234
       maximum-pool-size: 5
       connection-timeout: 1100
       keepalive-time: 30000
