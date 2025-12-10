@@ -7,12 +7,48 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.boot.logging.LogLevel
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
 class ApiControllerAdvice {
     private val log: Logger = LoggerFactory.getLogger(javaClass)
+
+    /**
+     * @Valid 또는 @Validated 검증 실패 시 발생하는 예외 처리
+     */
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun handleValidationException(e: MethodArgumentNotValidException): ResponseEntity<ApiResponse<Any>> {
+        log.info("ValidationException : {}", e.message)
+
+        val errorMap = e.bindingResult.fieldErrors.associate { fieldError ->
+            fieldError.field to (fieldError.defaultMessage ?: "입력값이 올바르지 않습니다.")
+        }
+
+        val errorType = ErrorType.INVALID_REQUEST
+        return ResponseEntity(
+            ApiResponse.error(errorType, errorMap),
+            errorType.status,
+        )
+    }
+
+    /**
+     * JSON 파싱 실패 또는 타입 불일치 (예: 숫자에 문자열 넣음, 콤마 누락 등)
+     */
+    @ExceptionHandler(HttpMessageNotReadableException::class)
+    fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException): ResponseEntity<ApiResponse<Any>> {
+        log.warn("HttpMessageNotReadableException : {}", e.message)
+
+        val errorType = ErrorType.INVALID_REQUEST
+        val customMessage = "요청 본문(JSON)을 읽을 수 없습니다. 형식을 확인해주세요."
+
+        return ResponseEntity(
+            ApiResponse.error(errorType, customMessage),
+            errorType.status,
+        )
+    }
 
     @ExceptionHandler(CoreException::class)
     fun handleCoreException(e: CoreException): ResponseEntity<ApiResponse<Any>> {
