@@ -10,11 +10,13 @@ class InventoryWriter(
     private val inventoryRepository: InventoryRepository,
 ) {
     fun createInventories(variants: List<ProductVariantEntity>, defaultStock: Long) {
-        inventoryRepository.saveAll(variants.map { variant ->
-            InventoryEntity(
-                productVariantId = variant.id,
-                quantity = defaultStock,
-            )
-        })
+        inventoryRepository.saveAll(
+            variants.map { variant ->
+                InventoryEntity(
+                    productVariantId = variant.id,
+                    quantity = defaultStock,
+                )
+            },
+        )
     }
 }

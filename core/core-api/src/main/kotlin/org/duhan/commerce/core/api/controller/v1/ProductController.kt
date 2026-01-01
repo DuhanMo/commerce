@@ -20,4 +20,3 @@ class ProductController(
         return ApiResponse.success()
     }
 }
-

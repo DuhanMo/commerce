@@ -35,10 +35,10 @@ class ProductVariantProcessor(
         val savedVariants = productVariantRepository.saveAll(variants)
         val mappings = combinations.zip(savedVariants).flatMap { (combination, variant) ->
             combination.map { ov ->
-                    ProductVariantOptionValueEntity(
-                        productVariantId = variant.id,
-                        optionValueId = ov.id,
-                    )
+                ProductVariantOptionValueEntity(
+                    productVariantId = variant.id,
+                    optionValueId = ov.id,
+                )
             }
         }
         // 배리언트 옵션 매핑 저장
@@ -46,7 +46,6 @@ class ProductVariantProcessor(
 
         return savedVariants
     }
-
 
     /**
      * [[화이트, 블랙],[M, L]] -> [[화이트, M],[화이트, L],[블랙, M],[블랙, L]]

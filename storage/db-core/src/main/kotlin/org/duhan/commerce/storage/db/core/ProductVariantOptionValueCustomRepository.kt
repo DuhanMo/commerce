@@ -11,8 +11,8 @@ interface ProductVariantOptionValueCustomRepository {
 
 @Repository
 class ProductVariantOptionValueCustomRepositoryImpl(
-    private val coreJdbcTemplate: JdbcTemplate
-): ProductVariantOptionValueCustomRepository {
+    private val coreJdbcTemplate: JdbcTemplate,
+) : ProductVariantOptionValueCustomRepository {
     override fun saveBulk(productVariantOptionValues: List<ProductVariantOptionValueEntity>) {
         if (productVariantOptionValues.isEmpty()) return
 
@@ -34,8 +34,7 @@ class ProductVariantOptionValueCustomRepositoryImpl(
                 override fun getBatchSize(): Int {
                     return productVariantOptionValues.size
                 }
-            }
+            },
         )
     }
-
 }
