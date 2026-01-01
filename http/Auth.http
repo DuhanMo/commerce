@@ -1,0 +1,16 @@
+### 1. 파트너 회원 가입
+POST http://localhost:8080/v1/auth/signup/partner
+Content-Type: application/json
+
+{
+  "email": "partner@test.com",
+  "password": "test1234",
+  "businessName": "(주)모두한주식회사",
+  "businessNumber": "555-07-12345",
+  "brand": {
+    "name": "나이키",
+    "description": "트렌디한 운동복"
+  }
+}
+
+###
