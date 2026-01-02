@@ -17,15 +17,24 @@ class JwtTokenProvider(
     private val key: SecretKey = Keys.hmacShaKeyFor(
         properties.secretKey.toByteArray(StandardCharsets.UTF_8),
     )
+    override fun createAccessToken(accountId: Long, email: String, role: String): String {
+        return createToken(accountId, email, role, properties.accessTokenExpiration)
+    }
 
-    override fun createToken(accountId: Long, email: String, role: String): String {
+    override fun createRefreshToken(accountId: Long): String {
+        return createToken(accountId, null, null, properties.refreshTokenExpiration)
+    }
+
+    private fun createToken(accountId: Long, email: String?, role: String?, expiration: Long): String {
         val now = Date()
-        val validity = Date(now.time + properties.accessTokenExpiration * 1000)
+        val validity = Date(now.time + expiration * 1000)
 
         return Jwts.builder()
-            .subject(email) // "sub" 클레임
-            .claim("id", accountId) // 커스텀 클레임 (ID)
-            .claim("role", role) // 커스텀 클레임 (Role)
+            .apply {
+                email?.let { subject(it) }
+                role?.let { claim("role", it) }
+            }
+            .claim("id", accountId)
             .issuedAt(now)
             .expiration(validity)
             .signWith(key)

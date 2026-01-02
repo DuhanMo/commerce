@@ -25,4 +25,4 @@ Content-Type: application/json
 ### 3. 인증토큰 확인
 GET http://localhost:8080/v1/samples?offset=0&limit=10
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXJ0bmVyQHRlc3QuY29tIiwiaWQiOjEsInJvbGUiOiJST0xFX1BBUlRORVIiLCJpYXQiOjE3NjczNTQ2NDUsImV4cCI6MTc2NzM1ODI0NX0.rHy_9tnk3JeZBlGMYusKIOaxAGfSC3qLOI8-Ipg418
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXJ0bmVyQHRlc3QuY29tIiwicm9sZSI6IlJPTEVfUEFSVE5FUiIsImlkIjoxLCJpYXQiOjE3NjczNTYyNDUsImV4cCI6MTc2NzM1OTg0NX0.KywWTpADCFrFNysNtWya2nbs-5l7q6moSNeqtziHngk

@@ -25,6 +25,6 @@ class AuthController(
     @PostMapping("/v1/auth/login/partner")
     fun loginPartner(@RequestBody request: LoginRequest): TokenResponse {
         val token = authService.loginPartner(request.toAction())
-        return TokenResponse(token)
+        return TokenResponse(token.accessToken, token.refreshToken)
     }
 }

@@ -6,6 +6,7 @@ import org.duhan.commerce.core.domain.SampleService
 import org.duhan.commerce.core.support.OffsetLimit
 import org.duhan.commerce.core.support.response.ApiResponse
 import org.duhan.commerce.core.support.response.PageResponse
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -18,6 +19,7 @@ class SampleController(
     private val sampleService: SampleService,
 ) {
     @GetMapping("/v1/samples")
+    @PreAuthorize("hasRole('ADMIN')")
     fun getSamples(
         @RequestParam offset: Int,
         @RequestParam limit: Int,
@@ -27,6 +29,7 @@ class SampleController(
     }
 
     @GetMapping("/v1/samples/{sampleId}")
+    @PreAuthorize("hasRole('ADMIN')")
     fun getSample(
         @PathVariable sampleId: Long,
     ): ApiResponse<SampleResponse> {
