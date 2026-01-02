@@ -7,6 +7,7 @@ spring:
       - monitoring.yml
       - logging.yml
       - db-core.yml
+      - jwt.yml
   web.resources.add-mappings: false
 
 server:

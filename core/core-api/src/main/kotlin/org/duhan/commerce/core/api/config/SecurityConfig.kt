@@ -1,5 +1,9 @@
 package org.duhan.commerce.core.api.config
 
+import org.duhan.commerce.support.jwt.JwtAccessDeniedHandler
+import org.duhan.commerce.support.jwt.JwtAuthenticationEntryPoint
+import org.duhan.commerce.support.jwt.JwtAuthenticationFilter
+import org.duhan.commerce.support.jwt.TokenProvider
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -12,11 +16,16 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-class SecurityConfig {
+class SecurityConfig(
+    private val tokenProvider: TokenProvider,
+    private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint,
+    private val jwtAccessDeniedHandler: JwtAccessDeniedHandler,
+) {
     @Bean
     fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder()
@@ -34,7 +43,7 @@ class SecurityConfig {
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http {
-            csrf {disable()}
+            csrf { disable() }
             sessionManagement {
                 sessionCreationPolicy = SessionCreationPolicy.STATELESS
             }
@@ -47,6 +56,13 @@ class SecurityConfig {
                 authorize(anyRequest, authenticated)
             }
 
+            addFilterBefore<UsernamePasswordAuthenticationFilter>(
+                JwtAuthenticationFilter(tokenProvider),
+            )
+            exceptionHandling {
+                authenticationEntryPoint = jwtAuthenticationEntryPoint // 401 처리
+                accessDeniedHandler = jwtAccessDeniedHandler // 403 처리
+            }
             headers {
                 // H2 Console 사용 시 필요
                 frameOptions { sameOrigin = true }

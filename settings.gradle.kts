@@ -6,6 +6,7 @@ include(
     "storage:db-core",
     "support:logging",
     "support:monitoring",
+    "support:jwt",
 )
 
 pluginManagement {
