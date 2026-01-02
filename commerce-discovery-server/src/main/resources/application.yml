@@ -1,0 +1,21 @@
+server:
+  port: 8761
+
+spring:
+  application:
+    name: commerce-discovery-server
+
+eureka:
+  instance:
+    hostname: localhost
+
+  client:
+    # 유레카 서버 자체 미등록
+    register-with-eureka: false
+    # 다른 유레카 서버로부터 목록을 가져올 필요없음 (단일 서버 구성 시).
+    fetch-registry: false
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+  server:
+    # 서비스가 빠르게 해제되도록 설정
+    wait-time-in-ms-when-sync-empty: 0

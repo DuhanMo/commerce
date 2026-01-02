@@ -19,12 +19,9 @@ class AuthService(
     private val partnerValidator: PartnerValidator,
     private val accountWriter: AccountWriter,
     private val partnerWriter: PartnerWriter,
-
-    private val jwtProperties: JwtProperties,
-    private val accountRepository: AccountRepository,
-    private val refreshTokenRepository: RefreshTokenRepository,
-    private val passwordEncoder: PasswordEncoder,
-    private val tokenProvider: TokenProvider,
+    private val accountReader: AccountReader,
+    private val passwordVerifier: PasswordVerifier,
+    private val tokenManager: TokenManager,
 ) {
     @Transactional
     fun signUpPartner(newPartner: NewPartner): Long {
@@ -38,39 +35,14 @@ class AuthService(
     }
 
     fun loginPartner(login: LoginAction): AuthToken {
-        // 1. 계정 조회
-        val account = accountRepository.findByEmail(login.email)
-            ?: throw CoreException(ErrorType.INVALID_REQUEST, "아이디 또는 비밀번호가 잘못되었습니다.")
+        val account = accountReader.readByEmail(login.email)
 
-        // 2. 파트너 권한 확인
         if (account.role != UserRole.ROLE_PARTNER) {
             throw CoreException(ErrorType.INVALID_REQUEST, "파트너 전용 로그인입니다.")
         }
 
-        // 3. 비밀번호 검증
-        if (!passwordEncoder.matches(login.password, account.password)) {
-            throw CoreException(ErrorType.INVALID_REQUEST, "아이디 또는 비밀번호가 잘못되었습니다.")
-        }
-        val accessToken = tokenProvider.createAccessToken(account.id, account.email, account.role.name)
-        val refreshTokenString = tokenProvider.createRefreshToken(account.id)
+        passwordVerifier.verify(login.password, account.password)
 
-        saveOrUpdateRefreshToken(account.id, refreshTokenString)
-
-        // 4. 토큰 생성 (ID, 이메일, 권한 포함)
-        return AuthToken(accessToken, refreshTokenString)
-    }
-
-    private fun saveOrUpdateRefreshToken(accountId: Long, token: String) {
-        val expiryDate = Instant.now().plusSeconds(jwtProperties.refreshTokenExpiration)
-
-        val refreshToken = refreshTokenRepository.findByAccountId(accountId)?.apply {
-            updateToken(token, jwtProperties.refreshTokenExpiration)
-        } ?: RefreshTokenEntity(
-            accountId = accountId,
-            token = token,
-            expiryDate = expiryDate,
-        )
-
-        refreshTokenRepository.save(refreshToken)
+        return tokenManager.generateToken(account.id, account.email, account.role.name)
     }
 }
