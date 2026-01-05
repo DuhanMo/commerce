@@ -1,3 +1,7 @@
+spring.profiles.active: local
+server:
+  port: 8000
+
 spring:
   application:
     name: commerce-gateway # 유레카에 등록될 이름
@@ -6,12 +10,19 @@ spring:
       server:
         webflux:
           routes:
-            - id: product-service
-              uri: lb://PRODUCT-SERVICE
+            - id: commerce-service-product
+              uri: lb://COMMERCE-SERVICE-PRODUCT
               predicates:
-                - Path=/api/product/**
+                - Path=/api/products/**
               filters:
                 - name: AuthorizationHeaderFilter
+            - id: commerce-SERVICE-auth
+              uri: lb://COMMERCE-SERVICE-AUTH
+              predicates:
+                - Path=/api/auth/**
+
+jwt:
+  secret-key: aYjmG74daClCdl4qEzyASV33v0ufBn2eXsf62nB9xF2
 
 # 유레카 서버 연결 설정
 eureka:

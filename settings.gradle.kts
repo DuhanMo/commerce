@@ -3,6 +3,7 @@ rootProject.name = "commerce"
 include(
     "commerce-discovery-server",
     "commerce-gateway",
+    "commerce-service-auth",
     "core:core-enum",
     "core:core-api",
     "storage:db-core",

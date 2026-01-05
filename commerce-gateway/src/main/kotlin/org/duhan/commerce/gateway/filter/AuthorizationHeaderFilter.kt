@@ -83,7 +83,7 @@ class AuthorizationHeaderFilter(
 
     private fun getAllClaimsFromJwt(jwt: String): Claims? {
         return try {
-            val secretKeyString = env.getProperty("token.secret")
+            val secretKeyString = env.getProperty("jwt.secret-key")
                 ?: throw IllegalStateException("토큰 비밀키가 설정되지 않았습니다.")
 
             val key: SecretKey = Keys.hmacShaKeyFor(secretKeyString.toByteArray(StandardCharsets.UTF_8))

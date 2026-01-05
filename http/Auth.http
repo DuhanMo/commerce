@@ -1,28 +1,8 @@
-### 1. 파트너 회원 가입
-POST http://localhost:8080/v1/auth/signup/partner
+### 1. 인증서버 테스트
+POST http://localhost:8000/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "partner@test.com",
-  "password": "test1234",
-  "businessName": "(주)모두한주식회사",
-  "businessNumber": "555-07-12345",
-  "brand": {
-    "name": "나이키",
-    "description": "트렌디한 운동복"
-  }
+  "email": "test",
+  "password": "test"
 }
-
-### 2. 파트너 로그인
-POST http://localhost:8080/v1/auth/login/partner
-Content-Type: application/json
-
-{
-  "email": "partner@test.com",
-  "password": "test1234"
-}
-
-### 3. 인증토큰 확인
-GET http://localhost:8080/v1/samples?offset=0&limit=10
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwYXJ0bmVyQHRlc3QuY29tIiwicm9sZSI6IlJPTEVfUEFSVE5FUiIsImlkIjoxLCJpYXQiOjE3NjczNTYyNDUsImV4cCI6MTc2NzM1OTg0NX0.KywWTpADCFrFNysNtWya2nbs-5l7q6moSNeqtziHngk

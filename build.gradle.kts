@@ -44,6 +44,7 @@ subprojects {
         testImplementation("com.ninja-squad:springmockk:${property("springMockkVersion")}")
         annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
         kapt("org.springframework.boot:spring-boot-configuration-processor")
+        implementation("com.fasterxml.uuid:java-uuid-generator:5.1.0")
     }
     tasks.getByName("bootJar") {
         enabled = false

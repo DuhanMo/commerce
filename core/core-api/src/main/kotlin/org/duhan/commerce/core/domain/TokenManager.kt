@@ -30,7 +30,7 @@ class TokenManager(
         } ?: RefreshTokenEntity(
             accountId = accountId,
             token = token,
-            expiryDate = expiryDate
+            expiryDate = expiryDate,
         )
 
         refreshTokenRepository.save(refreshToken)

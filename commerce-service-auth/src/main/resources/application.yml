@@ -1,0 +1,47 @@
+spring.profiles.active: local
+server:
+  port: 8081
+
+spring:
+  application:
+    name: commerce-service-auth # 유레카에 등록될 이름
+
+# 유레카 서버 연결 설정
+eureka:
+  instance:
+    # 서비스 인스턴스를 구분할 고유 ID (서비스명:포트 형태)
+    instance-id: ${spring.application.name}:${server.port}
+  client:
+    register-with-eureka: true # 유레카 서버에 자신을 등록함
+    fetch-registry: true      # 유레카 서버로부터 다른 서비스 목록을 가져옴
+    service-url:
+      defaultZone: http://localhost:8761/eureka/ # 유레카 서버 주소
+
+jwt:
+  secret-key: aYjmG74daClCdl4qEzyASV33v0ufBn2eXsf62nB9xF2
+  access-token-expiration: 3600 # 1시간
+  refresh-token-expiration: 1209600 # 14일
+
+---
+spring.config.activate.on-profile: local
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:auth;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+    hikari:
+      pool-name: commerce-service-auth-db-pool
+      data-source-properties:
+        rewriteBatchedStatements: true
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+  h2:
+    console:
+      enabled: true
