@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: commerce-gateway # 유레카에 등록될 이름
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: product-service
+              uri: lb://PRODUCT-SERVICE
+              predicates:
+                - Path=/api/product/**
+              filters:
+                - name: AuthorizationHeaderFilter
+
+# 유레카 서버 연결 설정
+eureka:
+  instance:
+    # 서비스 인스턴스를 구분할 고유 ID (서비스명:포트 형태)
+    instance-id: ${spring.application.name}:${server.port}
+  client:
+    register-with-eureka: true # 유레카 서버에 자신을 등록함
+    fetch-registry: true      # 유레카 서버로부터 다른 서비스 목록을 가져옴
+    service-url:
+      defaultZone: http://localhost:8761/eureka/ # 유레카 서버 주소
