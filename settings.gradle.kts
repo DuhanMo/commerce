@@ -4,6 +4,7 @@ include(
     "commerce-discovery-server",
     "commerce-gateway",
     "commerce-service-auth",
+    "modules:kafka",
     "core:core-enum",
     "core:core-api",
     "storage:db-core",

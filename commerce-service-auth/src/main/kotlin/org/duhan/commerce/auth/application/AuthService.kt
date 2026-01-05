@@ -1,12 +1,13 @@
 package org.duhan.commerce.auth.application
 
+import org.duhan.commerce.auth.domain.Account
 import org.duhan.commerce.auth.domain.AccountRepository
 import org.duhan.commerce.auth.domain.TokenProvider
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
-class AuthApplicationService(
+class AuthService(
     private val passwordEncoder: PasswordEncoder,
     private val accountRepository: AccountRepository,
     private val tokenProvider: TokenProvider,
@@ -24,6 +25,17 @@ class AuthApplicationService(
         return TokenResult(
             tokenProvider.createAccessToken(account.userId, account.email!!, account.role.name),
             tokenProvider.createRefreshToken(account.userId),
+        )
+    }
+
+    fun createAccount(command: CreateAccountCommand) {
+        accountRepository.save(
+            Account(
+                email = command.email,
+                password = passwordEncoder.encode(command.password),
+                userId = command.userId,
+                role = command.role,
+            ),
         )
     }
 }

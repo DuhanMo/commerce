@@ -9,4 +9,7 @@ class AccountRepositoryImpl(
     private val jpaRepository: AccountJpaRepository,
 ) : AccountRepository {
     override fun findByEmail(email: String): Account? = jpaRepository.findByEmail(email)
+    override fun save(account: Account) {
+        jpaRepository.save(account)
+    }
 }

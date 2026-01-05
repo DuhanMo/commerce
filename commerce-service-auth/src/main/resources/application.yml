@@ -5,6 +5,9 @@ server:
 spring:
   application:
     name: commerce-service-auth # 유레카에 등록될 이름
+  config:
+    import:
+      - kafka.yml
 
 # 유레카 서버 연결 설정
 eureka:
